@@ -1,0 +1,30 @@
+profile: dev
+
+image: 'ghcr.io/misdocumeno/l4d2-misarmy-server:dev'
+tickrate: 100
+
+dev:
+  instance: 100
+  port: 27115
+  sbId: 100
+  host: '192.168.100.200'
+  customMaps: false
+  # logLevel: DEBUG
+
+other:
+  - name: cambalache
+    instance: 5
+    port: 27019
+    sbId: 200
+    customMaps: false
+    command:
+      - '--auto-load-cfg'
+      - 'zonemod'
+      - '--auto-load-mode'
+      - 'connection'
+      - '--matchmodes-cfgs'
+      - 'zonemod'
+      - '--server-name'
+      - 'Mis Army #{INSTANCE} (cambalache)'
+      - '+map'
+      - 'bsas2_m1_barrios'

@@ -1,0 +1,7 @@
+/server/
+/unifix/
+/.venv/
+__pycache__/
+/.env
+/TODO.md
+/docker-compose.yml

@@ -1,0 +1,162 @@
+{{- $finalServices := coll.Slice -}}
+{{- $imagePrefix := "ghcr.io/misdocumeno/l4d2-misarmy-server" -}}
+
+
+{{- if eq .profile "prod" -}}
+
+  {{- $prodImage := printf "%s:%s" $imagePrefix $.version -}}
+
+  {{- range $i := seq 1 .servers.instances -}}
+    {{- $svc := dict 
+        "name" (printf "srcds-%d" $i)
+        "image" $prodImage
+        "restart" "always"
+        "env_file" (coll.Slice ".env")
+        "network" "misarmy-l4d2"
+        "tickrate" $.tickrate
+        "instance" $i
+        "port" (math.Add $.servers.basePort (math.Sub $i 1))
+        "sbId" (math.Add $.servers.baseSbId (math.Sub $i 1))
+        "command" (coll.Slice)
+        "isDev" false
+    -}}
+    {{- $finalServices = $finalServices | append $svc -}}
+  {{- end -}}
+
+  {{- if has . "other" -}}
+    {{- $baseIdx := .servers.instances -}}
+    {{- range $k, $v := .other -}}
+      {{- $currentIdx := math.Add $baseIdx (math.Add $k 1) -}}
+      
+      {{- $prodOthCommand := coll.Slice -}}
+      {{- if has $v "command" }}{{ $prodOthCommand = index $v "command" }}{{ end -}}
+
+      {{- $svc := dict 
+          "name" (printf "srcds-%d" $currentIdx)
+          "image" $prodImage
+          "restart" "always"
+          "env_file" (coll.Slice ".env")
+          "network" "misarmy-l4d2"
+          "tickrate" $.tickrate
+          "instance" $currentIdx
+          "port" (math.Add $.servers.basePort (math.Sub $currentIdx 1))
+          "sbId" (math.Add $.servers.baseSbId (math.Sub $currentIdx 1))
+          "command" $prodOthCommand
+          "isDev" false
+      -}}
+      {{- $finalServices = $finalServices | append $svc -}}
+    {{- end -}}
+  {{- end -}}
+
+
+{{- else if eq .profile "dev" -}}
+
+  {{- $devImage := printf "%s:%s" $imagePrefix "dev" -}}
+
+  {{- $mainHost := "" -}}
+  {{- if has .dev "host" }}{{ $mainHost = .dev.host }}{{ end -}}
+  
+  {{- $mainCustomMaps := true -}}
+  {{- if has .dev "customMaps" }}{{ $mainCustomMaps = .dev.customMaps }}{{ end -}}
+  
+  {{- $mainLogLevel := "" -}}
+  {{- if has .dev "logLevel" }}{{ $mainLogLevel = .dev.logLevel }}{{ end -}}
+
+  {{- $mainDev := dict
+      "name" "srcds-dev"
+      "image" $devImage
+      "restart" "no"
+      "env_file" (coll.Slice ".env")
+      "network" "misarmy-l4d2"
+      "tickrate" $.tickrate
+      "instance" .dev.instance
+      "port" .dev.port 
+      "sbId" .dev.sbId
+      "command" (coll.Slice)
+      "host" $mainHost
+      "customMaps" $mainCustomMaps
+      "logLevel" $mainLogLevel
+      "isDev" true
+  -}}
+  {{- $finalServices = $finalServices | append $mainDev -}}
+
+  {{- if has . "other" -}}
+    {{- range $v := .other -}}
+      
+      {{- $otherImage := printf "%s:%s" $imagePrefix $v.name -}}
+
+      {{- $othCommand := coll.Slice -}}
+      {{- if has $v "command" }}{{ $othCommand = index $v "command" }}{{ end -}}
+
+      {{- $othHost := "" -}}
+      {{- if has $v "host" }}{{ $othHost = index $v "host" }}{{ end -}}
+
+      {{- $othCustomMaps := true -}}
+      {{- if has $v "customMaps" }}{{ $othCustomMaps = index $v "customMaps" }}{{ end -}}
+
+      {{- $othLogLevel := "" -}}
+      {{- if has $v "logLevel" }}{{ $othLogLevel = index $v "logLevel" }}{{ end -}}
+
+      {{- $svc := dict
+          "name" (printf "srcds-%s" $v.name)
+          "image" $otherImage
+          "restart" "no"
+          "env_file" (coll.Slice ".env")
+          "network" "misarmy-l4d2"
+          "tickrate" $.tickrate
+          "instance" $v.instance
+          "port" $v.port
+          "sbId" $v.sbId
+          "command" $othCommand
+          "host" $othHost
+          "customMaps" $othCustomMaps
+          "logLevel" $othLogLevel
+          "isDev" true
+      -}}
+      {{- $finalServices = $finalServices | append $svc -}}
+    {{- end -}}
+  {{- end -}}
+
+{{- end -}}
+
+
+services:
+{{- range $svc := $finalServices }}
+  {{ $svc.name }}:
+    image: {{ $svc.image }}
+    {{- if $svc.isDev }}
+    build:
+      context: .
+      {{- if eq $svc.customMaps false }}
+      args:
+        - CUSTOM_MAPS=false
+      {{- end }}
+    {{- end }}
+    stdin_open: true
+    tty: true
+    restart: {{ $svc.restart }}
+    env_file:
+    {{- range $svc.env_file }}
+      - {{ . }}
+    {{- end }}
+    networks:
+      - default
+      - {{ $svc.network }}
+    environment:
+      - TICKRATE={{ $svc.tickrate }}
+      - INSTANCE={{ $svc.instance }}
+      - PORT={{ $svc.port }}
+      - SB_SERVER_ID={{ $svc.sbId }}
+      {{- if and ($svc.isDev) ($svc.logLevel) }}
+      - LOG_LEVEL={{ $svc.logLevel }}
+      {{- end }}
+    ports:
+      - "{{ if $svc.isDev }}{{ if ne $svc.host "" }}{{ $svc.host }}:{{ end }}{{ end }}{{ $svc.port }}:{{ $svc.port }}/udp"
+    {{- if $svc.command }}
+    command: {{ $svc.command | toJSON }}
+    {{- end }}
+{{- end }}
+
+networks:
+  misarmy-l4d2:
+    external: true

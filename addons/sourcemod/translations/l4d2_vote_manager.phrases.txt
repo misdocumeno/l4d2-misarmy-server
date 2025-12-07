@@ -1,0 +1,153 @@
+"Phrases"
+{
+	"Vetoed"
+	{
+		"#format"	"{1:N}"
+		"en"		"{orange}{1} {red}has vetoed current vote!"
+	}
+	
+	"Passed"
+	{
+		"#format"	"{1:N}"
+		"en"		"{olive}{1} {blue}has passed current vote!"
+	}
+	
+	"Cant Pass"
+	{
+		"en"		"{red}Not enough undecided {orange}players {red}to pass this vote!"
+	}
+	
+	"Cant Veto"
+	{
+		"en"		"{red}Not enough undecided {orange}players {red}to veto this vote!"
+	}	
+	
+	"No Vote"
+	{
+		"en"		"{red}No vote is currently in progress!"
+	}
+	
+	"Log Error"
+	{
+		"en"		"{red}Vote Manager 3 failed to log an action to its own file!"
+	}
+	
+	"Conflict"
+	{
+		"en"		"{red}A vote is active right now! Wait until that vote is over!"
+	}
+	
+	"Wait"
+	{
+		"#format"	"{1:d}"
+		"en"		"{red}You must wait {orange}{1} seconds {red}before calling a vote!"
+	}
+	
+	"No Access"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{orange}{1} {red}was prevented from starting a {orange}{2} {red}vote! Reason: {orange}no access!"
+	}	
+	
+	"Vote Called"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{olive}{1} {blue}started a {olive}{2} {blue}vote!"
+	}
+	
+	"Custom Vote"
+	{
+		"#format"	"{1:N},{2:s},{3:s},{4:s}"
+		"en"		"{olive}{1} {blue}started custom vote: {olive}{3} {blue}for team {olive}{2}{blue}, with command: {olive}{4}{blue}!"
+	}
+	
+	"Custom Vote Passed"
+	{
+		"en"		"{blue}Custom vote has passed..."
+	}
+	
+	"Use sm_customvote"
+	{
+		"en"		"{red}Please use {orange}sm_customvote {blue}to call custom votes!"
+	}
+	
+	"Custom Passed"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{blue}Custom vote called by, {olive}{1}{blue}, has passed! Issue was: {olive}'{2}'"
+	}
+	
+	"Custom Failed"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"{red}Custom vote called by, {orange}{1}{red}, has failed! Issue was: {orange}'{2}'"
+	}	
+	
+	"Vote Failed"
+	{
+		"en"		"{red}Called vote has failed!"
+	}
+	
+	"Vote Called 2 Arguments"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"{olive}{1} {blue}started a {olive}{2} {blue}vote with option {olive}{3}{blue}!"
+	}
+	
+	"Vote Passed"
+	{
+		"en"		"{blue}Called vote has passed!"
+	}
+
+	"Kick Vote"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{orange}{1} {red}has started a Kick vote against {orange}{2}{blue}!"
+	}
+
+	"Kick Vote Call Failed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{orange}{1} {red}was prevented from starting a Kick vote against {orange}{2}{blue}! Reason: {orange}can't target player!"
+	}
+	
+	"Kick Immunity"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{orange}{1} {red}was prevented from starting a Kick vote against {orange}{2}{red}! Reason: {orange}player is immune to kick votes!"
+	}	
+	
+	"Invalid Kick Userid"
+	{
+		"#format"	"{1:N},{2:s}"
+		"en"		"{orange}{1} {red}was prevented from starting a Kick vote against userid {orange}{2}{red}! Reason: {orange}invalid player!"
+	}
+	
+	"Tank Immune Response"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{orange}{1} {red}was prevented from starting a Kick vote against {orange}{2}{red}! Reason: {orange}tanks are immune!"
+	}
+	
+	"Spectator Response"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{orange}{1} {red}was prevented from starting a Kick vote against {orange}{2}{red}! Reason: {orange}spectators can't call kick votes!"
+	}
+	
+	"Client Exploit Attempt"
+	{
+		"#format"	"{1:N},{2:d},{3:s}"
+		"en"		"{orange}{1}{red}({orange}clientid:{2}{red}) tried to start a fake vote type to block further votes({orange}{3}{red})!"
+	}
+	
+	"Usage"
+	{
+		"en"		"{blue}Usage: {olive}sm_customvote{blue}: {orange}<string: text to display> <string: command to run if passed>{blue}!"
+	}
+	
+	"Invalid Handle"
+	{
+		"en"		"{red}Failed to create custom vote, consult developer!"
+	}	
+}	

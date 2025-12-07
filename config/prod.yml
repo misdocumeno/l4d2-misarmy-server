@@ -1,0 +1,24 @@
+profile: prod
+
+version: '10'
+tickrate: 100
+
+servers:
+  instances: 3
+  basePort: 27015
+  baseSbId: 1
+
+other:
+  - name: gauntlet
+    # launch parameters have a higher priority
+    # over environment variables
+    command:
+      - '--auto-load-cfg'
+      - 'gauntlet'
+      - '--auto-load-mode'
+      - 'connection'
+      - '--matchmodes-cfgs'
+      - 'gauntlet'
+      - '--server-name'
+      - 'Mis Army #{INSTANCE} (gauntlet, -insecure)'
+      - '-insecure'
