@@ -13,9 +13,6 @@ session.mount('https://', HTTPAdapter(max_retries=retries))
 
 maps = session.get('https://l4d2center.com/maps/servers/index.json').json()
 
-with open('server/left4dead2/addons/maps.json', 'w') as f:
-    json.dump(maps, f, indent=4)
-
 for i, map in enumerate(maps, 1):
     name = map["name"][:-4]
     target = f'server/left4dead2/addons/{name}.7z'
@@ -34,3 +31,7 @@ for i, map in enumerate(maps, 1):
         z.extractall('server/left4dead2/addons')
 
     os.remove(target)
+
+
+with open('server/left4dead2/addons/maps.json', 'w') as f:
+    json.dump(maps, f, indent=4)

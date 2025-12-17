@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docker-compose-up-debug",
+      "command": "./dev.sh",
+      "args": [],
+      "options": {
+        "env": {
+          "SM_ENV": "debug"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "close": true,
+        "group": "build"
+      },
+      "problemMatcher": {
+        "owner": "wrapper",
+        "fileLocation": "relative",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "[+] Building ",
+          "endsPattern": "^Starting with debugger...$"
+        }
+      },
+      "isBackground": true
+    }
+  ]
+}

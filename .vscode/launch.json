@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug wrapper",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": false,
+      "timeout": 10000,
+      "preLaunchTask": "docker-compose-up-debug",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/home/srcds"
+    }
+  ]
+}

@@ -16,10 +16,12 @@
     "configargparse",
     "confogl",
     "confoglcompmod",
+    "esbuild",
     "fakelag",
     "FCVAR",
     "forcelist",
     "gethostname",
+    "gomplate",
     "hardcoop",
     "keyvalues",
     "lerp",
@@ -41,6 +43,7 @@
     "mymotd",
     "neomod",
     "newdecls",
+    "nextmap",
     "nextmod",
     "nobackjumps",
     "noninteractive",
@@ -72,6 +75,7 @@
     "vanila",
     "vanillamax",
     "venv",
+    "visiblemaxplayers",
     "vpks",
     "zonehunters",
     "zoneinfo",
@@ -84,6 +88,12 @@
   "git.ignoreLimitWarning": true,
   "files.exclude": {
     "**/__pycache__": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/dist": true
   },
   "sourcepawnLanguageServer.sourcemod_home": "/home/mis/programming/SourcePawn/l4d2-misarmy-server/addons/sourcemod/scripting/include"
 }

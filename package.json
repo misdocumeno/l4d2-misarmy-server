@@ -1,0 +1,35 @@
+{
+  "name": "l4d2-misarmy-server",
+  "version": "1.0.0",
+  "description": "1. Configure `config/prod.yml`.",
+  "main": "index.js",
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/misdocumeno/l4d2-misarmy-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/misdocumeno/l4d2-misarmy-server/issues"
+  },
+  "homepage": "https://github.com/misdocumeno/l4d2-misarmy-server#readme",
+  "dependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/node": "^24.10.1",
+    "@types/yargs": "^17.0.35",
+    "adm-zip": "^0.5.16",
+    "esbuild": "^0.27.1",
+    "escape-string-regexp": "^5.0.0",
+    "execa": "^9.6.1",
+    "source-server-query": "^3.0.3",
+    "typescript": "^5.9.3",
+    "winston": "^3.19.0",
+    "yargs": "^18.0.0",
+    "zod": "^4.1.13"
+  }
+}

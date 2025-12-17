@@ -7,11 +7,12 @@
   {{- $prodImage := printf "%s:%s" $imagePrefix $.version -}}
 
   {{- range $i := seq 1 .servers.instances -}}
-    {{- $svc := dict 
+    {{- $svc := dict
         "name" (printf "srcds-%d" $i)
         "image" $prodImage
         "restart" "always"
         "env_file" (coll.Slice ".env")
+        "debugPort" ""
         "network" "misarmy-l4d2"
         "tickrate" $.tickrate
         "instance" $i
@@ -27,15 +28,16 @@
     {{- $baseIdx := .servers.instances -}}
     {{- range $k, $v := .other -}}
       {{- $currentIdx := math.Add $baseIdx (math.Add $k 1) -}}
-      
+
       {{- $prodOthCommand := coll.Slice -}}
       {{- if has $v "command" }}{{ $prodOthCommand = index $v "command" }}{{ end -}}
 
-      {{- $svc := dict 
+      {{- $svc := dict
           "name" (printf "srcds-%d" $currentIdx)
           "image" $prodImage
           "restart" "always"
           "env_file" (coll.Slice ".env")
+          "debugPort" ""
           "network" "misarmy-l4d2"
           "tickrate" $.tickrate
           "instance" $currentIdx
@@ -55,22 +57,26 @@
 
   {{- $mainHost := "" -}}
   {{- if has .dev "host" }}{{ $mainHost = .dev.host }}{{ end -}}
-  
+
   {{- $mainCustomMaps := true -}}
   {{- if has .dev "customMaps" }}{{ $mainCustomMaps = .dev.customMaps }}{{ end -}}
-  
+
   {{- $mainLogLevel := "" -}}
   {{- if has .dev "logLevel" }}{{ $mainLogLevel = .dev.logLevel }}{{ end -}}
+
+  {{- $mainDebugPort := "9229" -}}
+  {{- if has .dev "debugPort" }}{{ $mainDebugPort = .dev.debugPort }}{{ end -}}
 
   {{- $mainDev := dict
       "name" "srcds-dev"
       "image" $devImage
       "restart" "no"
       "env_file" (coll.Slice ".env")
+      "debugPort" $mainDebugPort
       "network" "misarmy-l4d2"
       "tickrate" $.tickrate
       "instance" .dev.instance
-      "port" .dev.port 
+      "port" .dev.port
       "sbId" .dev.sbId
       "command" (coll.Slice)
       "host" $mainHost
@@ -82,7 +88,7 @@
 
   {{- if has . "other" -}}
     {{- range $v := .other -}}
-      
+
       {{- $otherImage := printf "%s:%s" $imagePrefix $v.name -}}
 
       {{- $othCommand := coll.Slice -}}
@@ -97,11 +103,15 @@
       {{- $othLogLevel := "" -}}
       {{- if has $v "logLevel" }}{{ $othLogLevel = index $v "logLevel" }}{{ end -}}
 
+      {{- $othDebugPort := "" -}}
+      {{- if has $v "debugPort" }}{{ $othDebugPort = index $v "debugPort" }}{{ end -}}
+
       {{- $svc := dict
           "name" (printf "srcds-%s" $v.name)
           "image" $otherImage
           "restart" "no"
           "env_file" (coll.Slice ".env")
+          "debugPort" $othDebugPort
           "network" "misarmy-l4d2"
           "tickrate" $.tickrate
           "instance" $v.instance
@@ -151,6 +161,9 @@ services:
       - LOG_LEVEL={{ $svc.logLevel }}
       {{- end }}
     ports:
+      {{- if and ($svc.isDev) $svc.debugPort }}
+      - "{{ $svc.debugPort }}:9229/tcp"
+      {{- end }}
       - "{{ if $svc.isDev }}{{ if ne $svc.host "" }}{{ $svc.host }}:{{ end }}{{ end }}{{ $svc.port }}:{{ $svc.port }}/udp"
     {{- if $svc.command }}
     command: {{ $svc.command | toJSON }}

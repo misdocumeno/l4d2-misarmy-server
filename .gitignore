@@ -1,7 +1,9 @@
 /server/
 /unifix/
-/.venv/
+.venv/
+node_modules/
 __pycache__/
-/.env
+dist/
+.env
 /TODO.md
 /docker-compose.yml
