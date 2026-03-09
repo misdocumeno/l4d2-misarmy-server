@@ -17,7 +17,13 @@ def generate_campaigns_kv():
     for addon in addons:
         try:
             with vpk.open(os.path.join(addons_dir, addon)) as vpk_file:
-                mission = [f for f in vpk_file if f.startswith('missions/') and f.endswith('.txt')][0]
+                missions = [f for f in vpk_file if f.startswith('missions/') and f.endswith('.txt')]
+                if not missions:
+                    logger.error(f'No missions found in {addon}. skipping...')
+                    continue
+                if len(missions) > 1:
+                    logger.warn(f'Multiple missions found in {addon}. skipping...')
+                mission = missions[0]
                 mission_files.append(vpk_file[mission].read().decode())
         except:
             logger.error(f'Error extracting levels from {addon}. skipping...')
@@ -25,11 +31,11 @@ def generate_campaigns_kv():
     custom_campaigns: list[dict] = []
 
     for mission in mission_files:
-        kv = vdf.loads(mission)
+        kv = normalize_keys(vdf.loads(mission))
         chapters: list[str] = []
         for map in kv['mission']['modes']['versus'].values():
             chapters.append(map.get('Map') or map.get('map'))
-        custom_campaigns.append({'campaign': kv['mission']['DisplayTitle'], 'chapters': chapters})
+        custom_campaigns.append({'campaign': kv['mission']['displaytitle'], 'chapters': chapters})
 
     official = [campaign['campaign'] for campaign in official_maps]
 
@@ -49,3 +55,11 @@ def generate_campaigns_kv():
 
     with open(campaigns_file, 'w') as f:
         f.write(vdf.dumps(kv_data, pretty=True))
+
+
+def normalize_keys(obj):
+    if isinstance(obj, dict):
+        return {k.lower(): normalize_keys(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [normalize_keys(v) for v in obj]
+    return obj
