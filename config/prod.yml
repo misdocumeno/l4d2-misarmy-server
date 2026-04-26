@@ -1,6 +1,6 @@
 profile: prod
 
-version: '12'
+version: '13'
 tickrate: 100
 
 servers:
